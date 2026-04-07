@@ -1,0 +1,115 @@
+.app-container {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background-color: var(--bg);
+}
+
+.sidebar {
+  background-color: #1a1c23; /* Dark sidebar for contrast */
+  color: #adb5bd;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0;
+}
+
+.sidebar h1 {
+  color: #fff;
+  font-size: 1.25rem; /* Override the massive 56px in index.css */
+  margin: 0 0 2rem 0;
+  padding: 0 1.5rem;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar nav button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.sidebar nav button:hover {
+  background-color: #2d303e;
+  color: #fff;
+}
+
+.sidebar nav button.active {
+  background-color: var(--accent-bg);
+  color: var(--accent);
+  border-right: 4px solid #fff;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background-color: var(--bg);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-container {
+  padding: 2rem;
+}
+
+/* Dashboard Stats Styles */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 { margin: 0; color: #6c757d; font-size: 0.875rem; }
+.stat-card p { margin: 0.5rem 0 0; font-size: 1.5rem; font-weight: bold; }
+
+.app-footer { padding: 1rem 2rem; font-size: 0.8rem; color: #adb5bd; border-top: 1px solid #e9ecef; }
+
+/* Table Styles */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.data-table thead {
+  background-color: var(--code-bg);
+  text-align: left;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
