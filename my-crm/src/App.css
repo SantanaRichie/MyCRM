@@ -15,6 +15,12 @@
 }
 
 .sidebar h1 {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: #fff;
   font-size: 1.25rem; /* Override the massive 56px in index.css */
   margin: 0 0 2rem 0;
@@ -79,6 +85,14 @@
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
 }
 
 .stat-card h3 { margin: 0; color: #6c757d; font-size: 0.875rem; }
@@ -112,4 +126,57 @@
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+/* Calendar Workbook Styles */
+.calendar-workbook {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.calendar-tabs {
+  display: flex;
+  background: var(--code-bg);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.month-tab {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 60px;
+}
+
+.month-tab:hover { background: var(--border); }
+.month-tab.active {
+  background: var(--bg);
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+.calendar-sheet { padding: 1.5rem; }
+.calendar-sheet h3 { margin-top: 0; margin-bottom: 1rem; }
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.calendar-table th { color: var(--text); font-size: 0.8rem; padding-bottom: 0.5rem; }
+.calendar-table td {
+  height: 80px;
+  border: 1px solid var(--border);
+  text-align: right;
+  vertical-align: top;
+  padding: 0.5rem;
 }
