@@ -24,7 +24,7 @@ function App() {
         <h1 className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>Artist CRM</h1>
         <nav>
           <button className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>Dashboard</button>
-          <button className={activeTab === 'calendar' ? 'active' : ''} onClick={() => setActiveTab('calendar')}>Calendar</button>
+          {/* <button className={activeTab === 'calendar' ? 'active' : ''} onClick={() => setActiveTab('calendar')}>Calendar</button> */}
           <button className={activeTab === 'gigs' ? 'active' : ''} onClick={() => setActiveTab('gigs')}>Gigs</button>
           <button className={activeTab === 'artists' ? 'active' : ''} onClick={() => setActiveTab('artists')}>Artists</button>
           <button className={activeTab === 'venues' ? 'active' : ''} onClick={() => setActiveTab('venues')}>Venues</button>

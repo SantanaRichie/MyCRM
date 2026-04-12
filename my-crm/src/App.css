@@ -100,6 +100,36 @@
 
 .app-footer { padding: 1rem 2rem; font-size: 0.8rem; color: #adb5bd; border-top: 1px solid #e9ecef; }
 
+/* View Header & Action Buttons */
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.add-button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.add-button:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
 /* Table Styles */
 .data-table {
   width: 100%;
@@ -114,6 +144,19 @@
 .data-table thead {
   background-color: var(--code-bg);
   text-align: left;
+}
+
+.data-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--accent-bg);
+}
+
+.data-table tbody tr.selected-row {
+  background-color: var(--accent-bg);
 }
 
 .data-table th, .data-table td {
@@ -180,3 +223,129 @@
   vertical-align: top;
   padding: 0.5rem;
 }
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: var(--bg);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: var(--shadow);
+  color: var(--text-h);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.full-width { grid-column: span 2; }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancel-button {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.submit-button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Action Menu Styles */
+.action-cell {
+  position: relative;
+  text-align: center;
+}
+
+.meatball-button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.meatball-button:hover {
+  background-color: var(--border);
+}
+
+.menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.menu-dropdown button {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.menu-dropdown button:hover { background-color: var(--accent-bg); }
+.menu-dropdown button.danger { color: #ef4444; }
+.menu-dropdown button.danger:hover { background-color: #fee2e2; }
