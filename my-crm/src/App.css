@@ -3,6 +3,8 @@
   grid-template-columns: 240px 1fr;
   min-height: 100vh;
   background-color: var(--bg);
+  /* Prevents gray tap highlight on iOS */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sidebar {
@@ -12,6 +14,9 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
 }
 
 .sidebar h1 {
@@ -54,6 +59,23 @@
   border-right: 4px solid #fff;
 }
 
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .text-link-btn {
+  color: #adb5bd; /* Silver color for visibility on dark background */
+  font-size: 0.75rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.sidebar .text-link-btn:hover {
+  opacity: 1;
+}
+
 .main-content {
   display: flex;
   flex-direction: column;
@@ -64,7 +86,49 @@
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.user-profile {
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.user-profile:hover {
+  color: var(--accent);
+}
+
+.text-link-btn {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
 }
 
 .view-container {
@@ -254,10 +318,11 @@
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
+  /* inset: 0 is more reliable than 100vh for iOS Safari toolbars */
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
@@ -377,6 +442,34 @@
 .menu-dropdown button.danger { color: #ef4444; }
 .menu-dropdown button.danger:hover { background-color: #fee2e2; }
 
+/* Progress Bar Styles */
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: var(--border);
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--accent);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  color: var(--text);
+}
+
+.task-count {
+  font-size: 0.7rem;
+  color: #6c757d;
+  display: block;
+}
+
 .menu-toggle {
   display: none;
   background: none;
@@ -386,6 +479,120 @@
   cursor: pointer;
   padding: 0;
   line-height: 1;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Landing Page Styles */
+.landing-container {
+  background-color: #0f1115;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.landing-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.landing-nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero-section {
+  padding: 8rem 2rem;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-section h1 {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.highlight {
+  color: var(--accent);
+  background: linear-gradient(120deg, var(--accent) 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  color: #94a3b8;
+  margin-bottom: 2.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.cta-button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.features-grid-landing {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 4rem;
+  background: rgba(255,255,255,0.02);
+}
+
+.feature-item {
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.landing-footer {
+  padding: 4rem;
+  text-align: center;
+  color: #64748b;
 }
 
 .tab-nav-btn {
@@ -434,8 +641,20 @@
   color: var(--text-h);
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
+/* Mobile & Tablet Responsiveness (Optimized for Apple iPhone/iPad) */
+@media (max-width: 1024px) {
+    .landing-nav {
+      padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 1rem 1.5rem;
+    }
+    .hero-section h1 {
+      font-size: 2.5rem;
+    }
+    .features-grid-landing {
+      padding: 2rem;
+    }
+    .hero-actions {
+      flex-direction: column;
+    }
   .app-container {
     grid-template-columns: 1fr; /* Stack sidebar on top of content */
   }
@@ -445,9 +664,14 @@
   }
 
   .sidebar {
-    padding: 1rem 0;
+    /* Account for iPhone Notch in portrait */
+    padding: calc(1rem + env(safe-area-inset-top)) 0 1rem 0;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
   .sidebar h1 {
@@ -479,16 +703,33 @@
     border-bottom: 3px solid var(--accent);
   }
 
-  .app-header {
-    padding: 0.75rem 1rem;
+  .sidebar-footer {
+    display: none;
+    /* Account for home indicator on bottom-heavy iPhones */
+    padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom)) 1.5rem;
+  }
+
+  .sidebar.mobile-open .sidebar-footer {
+    display: block;
+    border-top: 1px solid #2d303e;
   }
 
   .view-container {
-    padding: 1rem;
+    /* Horizontal safe areas for landscape iPhones */
+    padding: 1rem calc(1rem + env(safe-area-inset-right)) 1rem calc(1rem + env(safe-area-inset-left));
   }
 
   .calendar-sheet {
     padding: 0.75rem;
+  }
+
+  .data-table th, .data-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .data-table .text-link-btn {
+    font-size: 0.9rem; /* Prevent links from shrinking too much in tables */
   }
 
   .form-grid {

@@ -105,7 +105,11 @@ const GigList = () => {
               className={selectedGigId === gig.id ? 'selected-row' : ''}
             >
               <td>{gig.name}</td>
-              <td>{gig.venue}</td>
+              <td>
+                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gig.venue)}`} target="_blank" rel="noopener noreferrer" className="text-link-btn">
+                  {gig.venue}
+                </a>
+              </td>
               <td>{gig.date}</td>
               <td>
                 <span className="status-badge" style={{ 
@@ -134,25 +138,20 @@ const GigList = () => {
 
       {selectedGigId && (
         <div className="details-section" style={{ marginTop: '2rem' }}>
-          <h2>Gig Details</h2>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Artist</th>
-                <th>Contact</th>
-                <th>Location</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{gigDetails[selectedGigId].artist}</td>
-                <td>{gigDetails[selectedGigId].contact}</td>
-                <td>{gigDetails[selectedGigId].location}</td>
-                <td>{gigDetails[selectedGigId].notes}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="view-header">
+            <h2>Gig Details: {gigs.find(g => g.id === selectedGigId)?.name}</h2>
+          </div>
+          <div className="stat-card">
+            <p><strong>Artist:</strong> {gigDetails[selectedGigId].artist}</p>
+            <p><strong>Primary Contact:</strong> {gigDetails[selectedGigId].contact}</p>
+            <p><strong>Location:</strong> 
+              <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gigDetails[selectedGigId].location)}`} target="_blank" rel="noopener noreferrer" className="text-link-btn" style={{ marginLeft: '5px' }}>
+                {gigDetails[selectedGigId].location}
+              </a>
+            </p>
+            <p style={{ marginTop: '1rem' }}><strong>Internal Notes:</strong></p>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text)' }}>{gigDetails[selectedGigId].notes}</p>
+          </div>
         </div>
       )}
 

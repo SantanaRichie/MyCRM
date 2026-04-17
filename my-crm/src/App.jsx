@@ -7,9 +7,13 @@ import VenueList from './VenueList.jsx';
 import ClientList from './ClientList.jsx';
 import ContactList from './ContactList.jsx';
 import ArtistStories from './ArtistStories.jsx'; // Import the new component
+import ClientRetention from './ClientRetention.jsx';
+import UserProfile from './UserProfile.jsx';
+import LandingPage from './LandingPage.jsx';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNavigation = (tab) => {
@@ -19,6 +23,18 @@ function App() {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setActiveTab('dashboard');
+  };
+
+  const resetDemoData = () => {
+    if (window.confirm("Reset all demo data to default?")) {
+      localStorage.removeItem('artist_crm_flat_db');
+      window.location.reload();
+    }
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'gigs': return <GigList />;
@@ -27,10 +43,16 @@ function App() {
       case 'clients': return <ClientList />;
       case 'contacts': return <ContactList />;
       case 'projects': return <ArtistStories />; // Add case for Artist Stories
+      case 'retention': return <ClientRetention />;
+      case 'profile': return <UserProfile />;
       case 'calendar': return <div>Google Calendar & API Settings</div>;
       default: return <Dashboard onNavigate={setActiveTab} />;
     }
   };
+
+  if (!isLoggedIn) {
+    return <LandingPage onEnter={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     <div className="app-container">
@@ -49,13 +71,26 @@ function App() {
           <button className={activeTab === 'venues' ? 'active' : ''} onClick={() => handleNavigation('venues')}>Venues</button>
           <button className={activeTab === 'clients' ? 'active' : ''} onClick={() => handleNavigation('clients')}>Clients</button>
           <button className={activeTab === 'projects' ? 'active' : ''} onClick={() => handleNavigation('projects')}>Projects</button> {/* New Projects button */}
+          <button className={activeTab === 'retention' ? 'active' : ''} onClick={() => handleNavigation('retention')}>Retention</button>
           <button className={activeTab === 'contacts' ? 'active' : ''} onClick={() => handleNavigation('contacts')}>Contacts</button>
         </nav>
+        <div className="sidebar-footer">
+          <button className="text-link-btn" onClick={resetDemoData}>Reset Demo Data</button>
+        </div>
       </aside>
 
       <div className="main-content">
         <header className="app-header">
-          <div className="user-profile">Admin User</div>
+          <div className="header-actions">
+            <div 
+              className="user-profile" 
+              onClick={() => handleNavigation('profile')}
+              style={{ cursor: 'pointer' }}
+            >
+              Admin User
+            </div>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </div>
         </header>
         <main className="view-container">
           {renderContent()}

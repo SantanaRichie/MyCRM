@@ -1,35 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { database } from './database';
 
 const ArtistStories = () => {
-  const [projects, setProjects] = useState([
-    {
-      id: 'proj-1',
-      title: 'Album Release: "Echoes of the Void"',
-      description: 'Manage all tasks related to the new album launch.',
-      tasks: [
-        { id: 'task-1', projectId: 'proj-1', title: 'Final Mix & Master', assignee: 'Studio Engineer', status: 'In Progress', dueDate: '2024-05-10' },
-        { id: 'task-2', projectId: 'proj-1', title: 'Artwork Design', assignee: 'Graphic Artist', status: 'To Do', dueDate: '2024-05-15' },
-        { id: 'task-3', projectId: 'proj-1', title: 'Distributor Upload', assignee: 'Manager', status: 'To Do', dueDate: '2024-05-20' },
-        { id: 'task-4', projectId: 'proj-1', title: 'Press Release Draft', assignee: 'Publicist', status: 'Done', dueDate: '2024-04-25' },
-      ],
-    },
-    {
-      id: 'proj-2',
-      title: 'Summer Tour Planning',
-      description: 'Organize logistics for the upcoming summer concert series.',
-      tasks: [
-        { id: 'task-5', projectId: 'proj-2', title: 'Venue Booking', assignee: 'Agent', status: 'In Progress', dueDate: '2024-06-01' },
-        { id: 'task-6', projectId: 'proj-2', title: 'Travel Arrangements', assignee: 'Tour Manager', status: 'To Do', dueDate: '2024-06-10' },
-      ],
-    },
-  ]);
-
-  const [selectedProject, setSelectedProject] = useState(projects[0]);
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState(null); // For editing existing tasks
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState(null); // For editing existing projects
   const [menuOpenId, setMenuOpenId] = useState(null);
+
+  // Load from local database on mount
+  useEffect(() => {
+    const db = database.getData();
+    setProjects(db.projects);
+    if (db.projects.length > 0) setSelectedProject(db.projects[0]);
+  }, []);
+
+  // Persist projects to local database on change
+  useEffect(() => {
+    if (projects.length === 0) return;
+    database.saveData({ ...database.getData(), projects });
+  }, [projects]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -128,6 +120,12 @@ const ArtistStories = () => {
     setMenuOpenId(null);
   };
 
+  const calculateProgress = (tasks) => {
+    if (!tasks || tasks.length === 0) return 0;
+    const done = tasks.filter(t => t.status === 'Done').length;
+    return Math.round((done / tasks.length) * 100);
+  };
+
   return (
     <div className="artist-stories-view">
       <div className="view-header">
@@ -141,21 +139,29 @@ const ArtistStories = () => {
             <tr>
               <th>Release / Project</th>
               <th>Objective</th>
-              <th style={{ width: '100px' }}>Milestones</th>
+              <th style={{ width: '150px' }}>Completion</th>
               <th style={{ width: '50px' }}></th>
             </tr>
           </thead>
           <tbody>
-            {projects.map(project => (
-              <tr 
-                key={project.id} 
-                onClick={() => setSelectedProject(project)}
-                className={selectedProject?.id === project.id ? 'selected-row' : ''}
-              >
-                <td><strong>{project.title}</strong></td>
-                <td>{project.description}</td>
-                <td><span className="status-badge" style={{ backgroundColor: 'var(--accent-bg)', color: 'var(--accent)' }}>{project.tasks.length} tasks</span></td>
-                <td className="action-cell">
+            {projects.map(project => {
+              const progress = calculateProgress(project.tasks);
+              return (
+                <tr 
+                  key={project.id} 
+                  onClick={() => setSelectedProject(project)}
+                  className={selectedProject?.id === project.id ? 'selected-row' : ''}
+                >
+                  <td><strong>{project.title}</strong></td>
+                  <td>{project.description}</td>
+                  <td>
+                    <div className="progress-container">
+                      <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                      <span className="progress-text">{progress}%</span>
+                    </div>
+                    <span className="task-count">{project.tasks.length} tasks</span>
+                  </td>
+                  <td className="action-cell">
                   <button 
                     className="meatball-button" 
                     onClick={(e) => { e.stopPropagation(); setMenuOpenId(menuOpenId === project.id ? null : project.id); }}
@@ -169,8 +175,9 @@ const ArtistStories = () => {
                     </div>
                   )}
                 </td>
-              </tr>
-            ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
