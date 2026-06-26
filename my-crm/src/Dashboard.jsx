@@ -4,8 +4,20 @@ const Dashboard = ({ onNavigate }) => {
   const [activeMonth, setActiveMonth] = useState(new Date().getMonth());
   const [activeWeekIndex, setActiveWeekIndex] = useState(0);
   const [tabStartIndex, setTabStartIndex] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate());
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const year = 2024; // Static year for context, can be made dynamic
+  const year = new Date().getFullYear();
+  const [isDayModalOpen, setIsDayModalOpen] = useState(false);
+
+  // Mock data for demonstration - in a real app, this would come from your database
+  const dailyEvents = {
+    [`${year}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`]: {
+      gigs: [{ name: "Today's Showcase", venue: "Local Lounge", time: "7:00 PM" }],
+      tasks: [{ title: "Confirm Soundcheck", status: "Pending" }, { title: "Print Setlists", status: "Done" }]
+    },
+    "2024-06-15": { gigs: [{ name: "Summer Jazz Night", venue: "The Blue Note", time: "8:00 PM" }], tasks: [] },
+    "2024-07-02": { gigs: [{ name: "Corporate Gala", venue: "Grand Hotel", time: "6:30 PM" }], tasks: [] }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,14 +30,16 @@ const Dashboard = ({ onNavigate }) => {
 
   // Initialize/Sync week index to "today" on mount or when month is manually changed via tabs
   useEffect(() => {
+    setSelectedDate(null);
     const firstDay = new Date(year, activeMonth, 1).getDay();
     const today = new Date();
     if (today.getMonth() === activeMonth && today.getFullYear() === year) {
       setActiveWeekIndex(Math.floor((firstDay + today.getDate() - 1) / 7));
+      setSelectedDate(today.getDate());
     } else {
       setActiveWeekIndex(0);
     }
-  }, [activeMonth]);
+  }, [activeMonth, year]);
 
   // Effect to keep the active month tab in the visible window of 4 tabs on mobile
   useEffect(() => {
@@ -45,6 +59,21 @@ const Dashboard = ({ onNavigate }) => {
 
   const handleNextMonths = () => setTabStartIndex(prev => Math.min(prev + 1, 8));
   const handlePrevMonths = () => setTabStartIndex(prev => Math.max(prev - 1, 0));
+
+  const handleGoToToday = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentDay = today.getDate();
+    
+    setSelectedDate(currentDay);
+    if (activeMonth === currentMonth) {
+      // Manually sync week if already in the current month
+      const firstDay = new Date(year, currentMonth, 1).getDay();
+      setActiveWeekIndex(Math.floor((firstDay + currentDay - 1) / 7));
+    } else {
+      setActiveMonth(currentMonth);
+    }
+  };
 
   const getTotalWeeks = (m) => {
     const firstDay = new Date(year, m, 1).getDay();
@@ -91,7 +120,10 @@ const Dashboard = ({ onNavigate }) => {
         </div>
       </div>
       <div className="calendar-section">
-        <h2>{isMobile ? 'Week View' : 'Event Calendar'}</h2>
+        <div className="view-header">
+          <h2>{isMobile ? 'Week View' : 'Event Calendar'}</h2>
+          <button className="today-btn" onClick={handleGoToToday}>Today</button>
+        </div>
         <div className="calendar-workbook">
           <div className="calendar-tabs">
             {isMobile && <button className="tab-nav-btn" onClick={handlePrevMonths} disabled={tabStartIndex === 0}>‹</button>}
@@ -130,9 +162,24 @@ const Dashboard = ({ onNavigate }) => {
                 {(() => {
                   const firstDay = new Date(year, activeMonth, 1).getDay();
                   const daysInMonth = new Date(year, activeMonth + 1, 0).getDate();
+                  const today = new Date();
+                  const isCurrentMonth = today.getFullYear() === year && today.getMonth() === activeMonth;
                   const days = [];
+                  
                   for (let i = 0; i < firstDay; i++) days.push(<td key={`e-${i}`}></td>);
-                  for (let d = 1; d <= daysInMonth; d++) days.push(<td key={d}>{d}</td>);
+                  for (let d = 1; d <= daysInMonth; d++) {
+                    const isToday = isCurrentMonth && d === today.getDate();
+                    const isSelected = selectedDate === d;
+                    days.push(
+                      <td 
+                        key={d} 
+                        className={`${isToday ? 'today' : ''} ${isSelected ? 'selected-day' : ''} ${dailyEvents[`${year}-${String(activeMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`] ? 'has-events' : ''}`}
+                        onClick={() => { setSelectedDate(d); setIsDayModalOpen(true); }}
+                      >
+                        {d}
+                      </td>
+                    );
+                  }
                   
                   if (isMobile) {
                     const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -164,6 +211,51 @@ const Dashboard = ({ onNavigate }) => {
           </div>
         </div>
       </div>
+
+      {isDayModalOpen && selectedDate && (
+        <div className="modal-overlay" onClick={() => setIsDayModalOpen(false)}>
+          <div className="modal-content day-detail-modal" onClick={e => e.stopPropagation()}>
+            <div className="view-header">
+              <h3>{months[activeMonth]} {selectedDate}, {year}</h3>
+              <button className="text-link-btn" onClick={() => setIsDayModalOpen(false)}>Close</button>
+            </div>
+            
+            {(() => {
+              const dateKey = `${year}-${String(activeMonth + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+              const dayData = dailyEvents[dateKey];
+
+              if (!dayData) return <p className="empty-state">No events or tasks scheduled for this day.</p>;
+
+              return (
+                <div className="day-details">
+                  {dayData.gigs?.length > 0 && (
+                    <div className="detail-group">
+                      <h4>Gigs</h4>
+                      {dayData.gigs.map((gig, i) => (
+                        <div key={i} className="detail-item gig-item">
+                          <strong>{gig.name}</strong>
+                          <span>{gig.time} @ {gig.venue}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {dayData.tasks?.length > 0 && (
+                    <div className="detail-group">
+                      <h4>Tasks</h4>
+                      {dayData.tasks.map((task, i) => (
+                        <div key={i} className="detail-item task-item">
+                          <span className={`status-dot ${task.status.toLowerCase().replace(' ', '-')}`}></span>
+                          {task.title}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Dashboard from './Dashboard.jsx';
 import GigList from './GigList.jsx';
@@ -13,8 +13,15 @@ import LandingPage from './LandingPage.jsx';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Persist login state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+  }, [isLoggedIn]);
 
   const handleNavigation = (tab) => {
     setActiveTab(tab);
@@ -26,6 +33,7 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setActiveTab('dashboard');
+    localStorage.removeItem('isLoggedIn');
   };
 
   const resetDemoData = () => {

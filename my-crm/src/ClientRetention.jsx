@@ -75,18 +75,20 @@ const ClientRetention = () => {
                 <td>{client.totalGigs}</td>
                 <td>{client.rebookCycle} days</td>
                 <td>
-                  <div className="progress-container" style={{ width: '120px' }}>
-                    <div 
-                      className="progress-bar" 
-                      style={{ 
-                        width: `${client.health}%`, 
-                        backgroundColor: getHealthColor(client.health) 
-                      }}
-                    ></div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div className="progress-container" style={{ width: '120px', marginBottom: 0, height: '12px', overflow: 'hidden' }}>
+                      <div 
+                        className="progress-bar" 
+                        style={{ 
+                          width: `${client.health}%`, 
+                          backgroundColor: getHealthColor(client.health) 
+                        }}
+                      ></div>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: getHealthColor(client.health), display: 'block', lineHeight: '1.2' }}>
+                      {client.status} ({client.health}%)
+                    </span>
                   </div>
-                  <span style={{ fontSize: '0.75rem', color: getHealthColor(client.health) }}>
-                    {client.status} ({client.health}%)
-                  </span>
                 </td>
                 <td className="action-cell">
                   <button 

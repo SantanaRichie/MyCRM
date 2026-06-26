@@ -82,7 +82,7 @@ const GigList = () => {
   }, [menuOpenId]);
 
   return (
-    <div className="gigs-view">
+    <div className="view-section">
       <div className="view-header">
         <h2>Gig Management</h2>
         <button className="add-button" title="Add New Gig" onClick={() => { setEditingGigId(null); setIsModalOpen(true); }}>+</button>

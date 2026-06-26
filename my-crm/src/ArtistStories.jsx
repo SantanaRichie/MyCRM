@@ -155,11 +155,15 @@ const ArtistStories = () => {
                   <td><strong>{project.title}</strong></td>
                   <td>{project.description}</td>
                   <td>
-                    <div className="progress-container">
-                      <div className="progress-bar" style={{ width: `${progress}%` }}></div>
-                      <span className="progress-text">{progress}%</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '120px' }}>
+                      <div className="progress-container" style={{ marginBottom: 0, height: '12px', overflow: 'hidden' }}>
+                        <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+                        <span className="progress-text">{progress}%</span>
+                        <span className="task-count">{project.tasks.length} tasks</span>
+                      </div>
                     </div>
-                    <span className="task-count">{project.tasks.length} tasks</span>
                   </td>
                   <td className="action-cell">
                   <button 
